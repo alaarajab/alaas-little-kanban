@@ -1,0 +1,436 @@
+/* ─── Reset & Tokens ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0e0e11;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --surface3: #26262e;
+  --border: rgba(255, 255, 255, 0.07);
+  --border2: rgba(255, 255, 255, 0.13);
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --todo: #7c6af7;
+  --todo-dim: rgba(124, 106, 247, 0.15);
+  --prog: #f5a623;
+  --prog-dim: rgba(245, 166, 35, 0.15);
+  --done: #3ecf8e;
+  --done-dim: rgba(62, 207, 142, 0.15);
+  --danger: #f26b6b;
+  --mono: "DM Mono", monospace;
+  --sans: "Syne", sans-serif;
+  --radius: 10px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ─── */
+header {
+  padding: 1.5rem 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.logo h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.logo .tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border: 1px solid var(--border2);
+  border-radius: 999px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-count {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ─── Add Card Bar ─── */
+.add-bar {
+  padding: 0.85rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.add-bar input {
+  flex: 1;
+  max-width: 360px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.add-bar input:focus {
+  border-color: var(--todo);
+}
+.add-bar input::placeholder {
+  color: var(--muted);
+}
+
+.add-bar select {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+}
+
+.add-bar button {
+  background: var(--todo);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1.1rem;
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+}
+.add-bar button:hover {
+  opacity: 0.85;
+}
+.add-bar button:active {
+  transform: scale(0.97);
+}
+
+.hint-text {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ─── Board ─── */
+.board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 1.5rem 1.5rem 2rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+/* ─── Column ─── */
+.col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  transition: border-color 0.2s;
+}
+
+.col.drag-over {
+  border-color: var(--col-accent);
+  background: var(--col-dim);
+}
+
+.col-header {
+  padding: 1rem 1.1rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.col-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--col-accent);
+  flex-shrink: 0;
+}
+
+.col-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--col-accent);
+  flex: 1;
+}
+
+.col-badge {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  background: var(--col-dim);
+  color: var(--col-accent);
+  padding: 2px 8px;
+  border-radius: 999px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* ─── Card list ─── */
+.cards {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  min-height: 60px;
+}
+
+.drop-placeholder {
+  border: 2px dashed var(--col-accent);
+  border-radius: var(--radius);
+  height: 60px;
+  opacity: 0.4;
+  border-style: dashed;
+  flex-shrink: 0;
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+  cursor: grab;
+  user-select: none;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s,
+    opacity 0.15s,
+    border-color 0.15s;
+  position: relative;
+  animation: cardIn 0.2s ease both;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.card.dragging {
+  opacity: 0.35;
+  transform: scale(0.97);
+  box-shadow: none;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.card-text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  flex: 1;
+  color: var(--text);
+}
+
+.card-delete {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition:
+    opacity 0.12s,
+    color 0.12s,
+    background 0.12s;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 0;
+}
+.card:hover .card-delete {
+  opacity: 1;
+}
+.card-delete:hover {
+  color: var(--danger);
+  background: rgba(242, 107, 107, 0.1);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.card-id {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.card-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.col-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 1.5rem;
+  text-align: center;
+  opacity: 0.6;
+}
+
+/* ─── Progress bar ─── */
+.progress-wrap {
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--border);
+}
+.progress-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+  display: flex;
+  justify-content: space-between;
+}
+.progress-track {
+  height: 3px;
+  background: var(--border2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--done);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* ─── Color-coded columns ─── */
+[data-col="todo"] {
+  --col-accent: var(--todo);
+  --col-dim: var(--todo-dim);
+}
+[data-col="progress"] {
+  --col-accent: var(--prog);
+  --col-dim: var(--prog-dim);
+}
+[data-col="done"] {
+  --col-accent: var(--done);
+  --col-dim: var(--done-dim);
+}
+
+/* ─── Tags ─── */
+.tag-feature {
+  background: rgba(124, 106, 247, 0.2);
+  color: #a899ff;
+}
+.tag-bug {
+  background: rgba(242, 107, 107, 0.2);
+  color: #f9a0a0;
+}
+.tag-docs {
+  background: rgba(245, 166, 35, 0.2);
+  color: #ffc878;
+}
+.tag-design {
+  background: rgba(62, 207, 142, 0.2);
+  color: #7deaba;
+}
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 0.5rem 1.1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  opacity: 0;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
