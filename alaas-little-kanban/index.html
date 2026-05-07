@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alaa's Kanban Board</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <h1>Kanban</h1>
+        <span class="tag">DOM + Events</span>
+      </div>
+      <div class="header-right">
+        <span class="card-count" id="cardCount"></span>
+      </div>
+    </header>
+
+    <!-- Add card bar -->
+    <div class="add-bar">
+      <input
+        type="text"
+        id="newCardText"
+        placeholder="New card title…"
+        maxlength="120"
+      />
+      <select id="newCardTag">
+        <option value="feature">feature</option>
+        <option value="bug">bug</option>
+        <option value="docs">docs</option>
+        <option value="design">design</option>
+      </select>
+      <select id="newCardCol">
+        <option value="todo">To Do</option>
+        <option value="progress">In Progress</option>
+        <option value="done">Done</option>
+      </select>
+      <button id="addBtn">Add card</button>
+      <span class="hint-text">or press Enter</span>
+    </div>
+
+    <!-- Board -->
+    <main class="board">
+      <div class="col" data-col="todo">
+        <div class="col-header">
+          <div class="col-dot"></div>
+          <span class="col-title">To Do</span>
+          <span class="col-badge" id="badge-todo">0</span>
+        </div>
+        <div class="cards" id="col-todo"></div>
+      </div>
+
+      <div class="col" data-col="progress">
+        <div class="col-header">
+          <div class="col-dot"></div>
+          <span class="col-title">In Progress</span>
+          <span class="col-badge" id="badge-progress">0</span>
+        </div>
+        <div class="cards" id="col-progress"></div>
+      </div>
+
+      <div class="col" data-col="done">
+        <div class="col-header">
+          <div class="col-dot"></div>
+          <span class="col-title">Done</span>
+          <span class="col-badge" id="badge-done">0</span>
+        </div>
+        <div class="cards" id="col-done"></div>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Completion</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-track">
+            <div
+              class="progress-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+    <!-- JS loaded at the end so the DOM is ready -->
+    <script src="app.js"></script>
+  </body>
+</html>
